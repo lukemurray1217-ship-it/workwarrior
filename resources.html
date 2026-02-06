@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources & FAQ | Work Warrior</title>
+    <link rel="canonical" href="https://workwarrior.com/resources" />
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&family=Inter:wght@400;500;700&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <a href="index.html" class="logo">
+                <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="sitting.html">Sitting</a></li>
+                    <li><a href="standing.html">Standing</a></li>
+                    <li><a href="research.html">Research</a></li>
+                    <li><a href="resources.html" class="active">Resources</a></li>
+                </ul>
+            </nav>
+            <button id="settings-toggle" class="icon-btn" title="Settings">⚙️</button>
+        </header>
+
+        <main>
+            <section class="hero-section hero-resources">
+                <h2>Common Questions</h2>
+                <p>Everything you need to know about starting your workspace wellness journey.</p>
+            </section>
+
+            <div class="content-area">
+
+                <div class="faq-item">
+                    <h4>How often should I move?</h4>
+                    <p>The 20-20-20 rule is a great start (every 20 mins, look 20 feet away for 20 seconds). For
+                        physical
+                        movement, aim to stand or stretch for at least 2 minutes every hour.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Can I do these in a communal office?</h4>
+                    <p>Absolutely! The exercises on the "Sitting" page are subtle and perfect for open-plan offices.
+                        Encouraging your colleagues to join in creates a more supportive culture.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Do I need special equipment?</h4>
+                    <p>No. All exercises are designed to be done with just your body weight and standard office
+                        furniture
+                        like a chair or desk.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>What if I have a pre-existing injury?</h4>
+                    <p>Always listen to your body. If an exercise causes sharp pain, stop immediately and consult a
+                        professional. The exercises here are generally light and designed for preventative maintenance.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Is movement actually productive?</h4>
+                    <p>Yes. Movement breaks increase oxygen flow to the brain, which enhances problem-solving abilities
+                        and
+                        prevents the "brain fog" that often occurs in the afternoon.</p>
+                </div>
+
+                <h2 class="section-title" style="margin-top: 4rem;">External Resources</h2>
+                <div class="info-card">
+                    <ul style="list-style: square; padding-left: 1.5rem;">
+                        <li style="margin-bottom: 1rem;"><a href="https://aistudio.google.com/app/apikey"
+                                target="_blank" style="color: var(--primary);">Get your Gemini API Key</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="https://www.osha.gov/ergonomics" target="_blank"
+                                style="color: var(--primary);">OSHA Ergonomics Guidelines</a></li>
+                        <li><a href="https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/office-ergonomics/art-20046169"
+                                target="_blank" style="color: var(--primary);">Mayo Clinic: Office Ergonomics</a></li>
+                    </ul>
+                </div>
+        </main>
+    </div>
+
+    <aside id="settings-panel" class="settings-panel hidden">
+        <div class="settings-header">
+            <h3>Settings</h3>
+            <button id="close-settings" class="close-btn">&times;</button>
+        </div>
+        <div class="settings-content">
+            <div class="setting-group">
+                <label for="gemini-model">Gemini Model</label>
+                <select id="gemini-model">
+                    <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                    <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (Latest)</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                    <option value="gemini-1.5-pro-latest">Gemini 1.5 Pro (Latest)</option>
+                    <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Exp)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <button id="check-models" class="secondary-btn" style="margin-bottom: 1rem; width: 100%;">🔍 Check
+                    Available Models</button>
+                <div id="model-list-debug" class="hint"
+                    style="max-height: 100px; overflow-y: auto; white-space: pre-wrap;"></div>
+            </div>
+            <div class="setting-group">
+                <label for="api-key">Gemini API Key</label>
+                <input type="password" id="api-key" placeholder="Enter your API key">
+            </div>
+            <div class="setting-group">
+                <label for="system-prompt">System Prompt</label>
+                <textarea id="system-prompt" rows="10"></textarea>
+            </div>
+            <button id="save-settings" class="secondary-btn">Save Configuration</button>
+        </div>
+    </aside>
+
+    <a href="index.html" class="floating-logo" title="Back to Home">
+        <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+    </a>
+    <script src="app.js"></script>
+</body>
+
+</html>

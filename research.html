@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research | Work Warrior</title>
+    <link rel="canonical" href="https://workwarrior.com/research" />
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&family=Inter:wght@400;500;700&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <a href="index.html" class="logo">
+                <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="sitting.html">Sitting</a></li>
+                    <li><a href="standing.html">Standing</a></li>
+                    <li><a href="research.html" class="active">Research</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                </ul>
+            </nav>
+            <button id="settings-toggle" class="icon-btn" title="Settings">⚙️</button>
+        </header>
+
+        <main>
+            <section class="hero-section hero-research">
+                <h2>The Science of Movement</h2>
+                <p>Evidence-based insights into how physical activity transforms your work life.</p>
+            </section>
+
+            <div class="content-area">
+
+                <div class="info-card">
+                    <h3>Boosting Cognitive Function</h3>
+                    <p>Studies from Stanford University show that walking increases creative output by an average of
+                        60%.
+                        The act of movement stimulates the release of neurotransmitters that enhance focus and memory
+                        retention.</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Ergonomics & Longevity</h3>
+                    <p>Research published in the British Journal of Sports Medicine indicates that breaking up sedentary
+                        time with "activity snacks" significantly reduces metabolic risks. Even 30 seconds of stretching
+                        resets the musculoskeletal system.</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Emotional Wellbeing</h3>
+                    <p>Physical activity is directly linked to lower cortisol levels. A supportive work environment
+                        where
+                        movement is encouraged leads to higher job satisfaction and lower burnout rates.</p>
+                </div>
+
+                <div class="info-card">
+                    <h3>Cardiac Health</h3>
+                    <p>The Lancet published findings that even light-intensity physical activity is associated with a
+                        14%
+                        reduced risk of all-cause mortality. Standing instead of sitting burns approximately 50 extra
+                        calories per hour.</p>
+                </div>
+        </main>
+    </div>
+
+    <aside id="settings-panel" class="settings-panel hidden">
+        <div class="settings-header">
+            <h3>Settings</h3>
+            <button id="close-settings" class="close-btn">&times;</button>
+        </div>
+        <div class="settings-content">
+            <div class="setting-group">
+                <label for="gemini-model">Gemini Model</label>
+                <select id="gemini-model">
+                    <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                    <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (Latest)</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                    <option value="gemini-1.5-pro-latest">Gemini 1.5 Pro (Latest)</option>
+                    <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Exp)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <button id="check-models" class="secondary-btn" style="margin-bottom: 1rem; width: 100%;">🔍 Check
+                    Available Models</button>
+                <div id="model-list-debug" class="hint"
+                    style="max-height: 100px; overflow-y: auto; white-space: pre-wrap;"></div>
+            </div>
+            <div class="setting-group">
+                <label for="api-key">Gemini API Key</label>
+                <input type="password" id="api-key" placeholder="Enter your API key">
+            </div>
+            <div class="setting-group">
+                <label for="system-prompt">System Prompt</label>
+                <textarea id="system-prompt" rows="10"></textarea>
+            </div>
+            <button id="save-settings" class="secondary-btn">Save Configuration</button>
+        </div>
+    </aside>
+
+    <a href="index.html" class="floating-logo" title="Back to Home">
+        <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+    </a>
+    <script src="app.js"></script>
+</body>
+
+</html>

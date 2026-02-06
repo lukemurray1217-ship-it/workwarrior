@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitting Exercises | Work Warrior</title>
+    <link rel="canonical" href="https://workwarrior.com/sitting" />
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&family=Inter:wght@400;500;700&family=Outfit:wght@800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <a href="index.html" class="logo">
+                <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="sitting.html" class="active">Sitting</a></li>
+                    <li><a href="standing.html">Standing</a></li>
+                    <li><a href="research.html">Research</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                </ul>
+            </nav>
+            <button id="settings-toggle" class="icon-btn" title="Settings">⚙️</button>
+        </header>
+
+        <main>
+            <section class="hero-section hero-sitting">
+                <h2>Sitting Exercises</h2>
+                <p>Stay active without leaving your desk. These exercises are designed to be done while seated.</p>
+            </section>
+
+            <div class="content-area">
+
+                <div class="exercise-grid" id="sitting-exercises-list">
+                    <!-- Will be populated by JS -->
+                </div>
+
+                <div class="info-card" style="margin-top: 4rem;">
+                    <h3>Why Sitting Mobility Matters</h3>
+                    <p>Prolonged sitting can lead to "Adaptive Shortening" of the hip flexors and chest muscles. Moving
+                        every 30 minutes resets your posture and improves blood flow to your brain.</p>
+                </div>
+        </main>
+    </div>
+
+    <!-- Same settings panel as index for consistency -->
+    <aside id="settings-panel" class="settings-panel hidden">
+        <div class="settings-header">
+            <h3>Settings</h3>
+            <button id="close-settings" class="close-btn">&times;</button>
+        </div>
+        <div class="settings-content">
+            <div class="setting-group">
+                <label for="gemini-model">Gemini Model</label>
+                <select id="gemini-model">
+                    <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                    <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (Latest)</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                    <option value="gemini-1.5-pro-latest">Gemini 1.5 Pro (Latest)</option>
+                    <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Exp)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <button id="check-models" class="secondary-btn" style="margin-bottom: 1rem; width: 100%;">🔍 Check
+                    Available Models</button>
+                <div id="model-list-debug" class="hint"
+                    style="max-height: 100px; overflow-y: auto; white-space: pre-wrap;"></div>
+            </div>
+            <div class="setting-group">
+                <label for="api-key">Gemini API Key</label>
+                <input type="password" id="api-key" placeholder="Enter your API key">
+            </div>
+            <div class="setting-group">
+                <label for="system-prompt">System Prompt</label>
+                <textarea id="system-prompt" rows="10"></textarea>
+            </div>
+            <button id="save-settings" class="secondary-btn">Save Configuration</button>
+        </div>
+    </aside>
+
+    <a href="index.html" class="floating-logo" title="Back to Home">
+        <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+    </a>
+    <script src="exercises.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const list = document.getElementById('sitting-exercises-list');
+            const sittingExercises = EXERCISES.filter(ex => ex.category === 'Desk'); // Using 'Desk' as category for sitting
+
+            sittingExercises.forEach(ex => {
+                const card = document.createElement('div');
+                card.className = 'exercise-card';
+                card.innerHTML = `
+                    <div class="exercise-tag tag-sitting">Sitting</div>
+                    <div class="card-icon">${ex.icon}</div>
+                    <h3>${ex.title}</h3>
+                    <p>${ex.description}</p>
+                    <div class="benefit">
+                        <strong>Benefit:</strong> ${ex.benefit}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>
