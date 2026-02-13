@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research | Work Warrior</title>
-    <link rel="canonical" href="https://workwarrior.com/research" />
+    <title>Research | Wellness Workspace</title>
     <link rel="stylesheet" href="styles.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&family=Inter:wght@400;500;700&family=Outfit:wght@800&display=swap"
@@ -21,52 +20,167 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="sitting.html">Sitting</a></li>
-                    <li><a href="standing.html">Standing</a></li>
+                    <li><a href="groups.html">Groups</a></li>
+                    <li><a href="exercises.html">Exercise</a></li>
+
                     <li><a href="research.html" class="active">Research</a></li>
                     <li><a href="resources.html">Resources</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
                 </ul>
             </nav>
+            <div class="auth-nav">
+                <button id="login-nav-btn" class="primary-btn">Login</button>
+                <div id="user-info" class="hidden">
+                    <span id="user-display"></span>
+                    <button id="logout-btn" class="secondary-btn"
+                        style="width: auto; padding: 0.5rem 1rem; margin-left: 1rem;">Logout</button>
+                </div>
+            </div>
             <button id="settings-toggle" class="icon-btn" title="Settings">⚙️</button>
+            <button id="mobile-menu-toggle" class="icon-btn mobile-only" title="Menu">☰</button>
         </header>
 
+        <!-- Auth Modal -->
+        <div id="auth-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <button class="modal-close" id="close-auth">&times;</button>
+                <div id="login-view">
+                    <form id="auth-form" class="auth-form">
+                        <h3 id="auth-title">Welcome Back</h3>
+                        <p id="auth-subtitle">Enter your email and password to log in.</p>
+                        <div class="setting-group">
+                            <label>Email Address</label>
+                            <input type="email" id="auth-email" placeholder="email@example.com" required>
+                        </div>
+                        <div class="setting-group">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label>Password</label>
+                                <button type="button" id="forgot-password-btn" class="hint-link"
+                                    style="font-size: 0.75rem; background: none; border: none; color: var(--primary); cursor: pointer; padding: 0;">Forgot?</button>
+                            </div>
+                            <input type="password" id="auth-password" placeholder="••••••••" required>
+                        </div>
+                        <div class="setting-group hidden" id="auth-role-group">
+                            <label>I am a...</label>
+                            <select id="auth-role">
+                                <option value="member">Group Member</option>
+                                <option value="leader">Group Leader</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="auth-submit" class="primary-btn"
+                            style="width: 100%; justify-content: center;">Log In</button>
+                        <div class="auth-toggle">
+                            <span id="toggle-text">Don't have an account?</span>
+                            <button type="button" id="toggle-auth">Create Account</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="reset-view" class="hidden">
+                    <div class="auth-form">
+                        <h3>Reset Password</h3>
+                        <p>Enter your email and new password.</p>
+                        <div class="setting-group">
+                            <label>Email Address</label>
+                            <input type="email" id="reset-email" placeholder="email@example.com">
+                        </div>
+                        <div class="setting-group">
+                            <label>New Password</label>
+                            <input type="password" id="new-password" placeholder="••••••••">
+                        </div>
+                        <button type="button" id="confirm-reset" class="primary-btn"
+                            style="width: 100%; justify-content: center;">Update Password</button>
+                        <div class="auth-toggle">
+                            <button type="button" id="back-to-login">Back to Login</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <main>
-            <section class="hero-section hero-research">
-                <h2>The Science of Movement</h2>
-                <p>Evidence-based insights into how physical activity transforms your work life.</p>
+            <section class="hero-section hero-research reveal">
+                <div class="content-container">
+                    <h2>Efficacy through Evidence.</h2>
+                    <p>Substantiating the impact of intermittent movement on metabolic health, cognitive function, and
+                        longevity.</p>
+                </div>
             </section>
 
             <div class="content-area">
+                <div class="content-container">
+                    <div class="info-card reveal">
+                        <h3>Metabolic Optimization</h3>
+                        <p>Research indicates that 5 minutes of low-intensity movement every 30 minutes can
+                            <strong>reduce
+                                postprandial glucose spikes by 60%</strong>. This protocol is critical for maintaining
+                            stable energy levels throughout the workday.
+                        </p>
+                        <a href="https://www.cuimc.columbia.edu/news/rx-prolonged-sitting-five-minute-stroll-every-half-hour"
+                            target="_blank" class="hint-link">Columbia University Medical Center</a>
+                    </div>
 
-                <div class="info-card">
-                    <h3>Boosting Cognitive Function</h3>
-                    <p>Studies from Stanford University show that walking increases creative output by an average of
-                        60%.
-                        The act of movement stimulates the release of neurotransmitters that enhance focus and memory
-                        retention.</p>
-                </div>
+                    <div class="info-card reveal">
+                        <h3>Muscular & Spinal Alignment</h3>
+                        <p>Breaking up prolonged sedentary intervals prevents muscular fatigue and cumulative spinal
+                            compression. Regular movement protocols act as a "neuromuscular reset," maintaining optimal
+                            structural integrity.</p>
+                        <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11641771/" target="_blank"
+                            class="hint-link">National Library of Medicine</a>
+                    </div>
 
-                <div class="info-card">
-                    <h3>Ergonomics & Longevity</h3>
-                    <p>Research published in the British Journal of Sports Medicine indicates that breaking up sedentary
-                        time with "activity snacks" significantly reduces metabolic risks. Even 30 seconds of stretching
-                        resets the musculoskeletal system.</p>
-                </div>
+                    <div class="info-card reveal">
+                        <h3>Cognitive Resilience</h3>
+                        <p>Short activity bursts correlate with significant improvements in executive function and
+                            attentional control. Brief movement intervals facilitate blood flow to the cerebral cortex,
+                            enhancing mental clarity.</p>
+                        <a href="https://www.npr.org/sections/health-shots/2023/01/12/1148503294/sitting-all-day-can-be-deadly-5-minute-walks-can-offset-harms"
+                            target="_blank" class="hint-link">NPR Health Research</a>
+                    </div>
 
-                <div class="info-card">
-                    <h3>Emotional Wellbeing</h3>
-                    <p>Physical activity is directly linked to lower cortisol levels. A supportive work environment
-                        where
-                        movement is encouraged leads to higher job satisfaction and lower burnout rates.</p>
-                </div>
+                    <div class="info-card reveal">
+                        <h3>The "Activity Snack" Paradigm</h3>
+                        <p>Utilizing "activity snacks"—high-frequency, low-duration movement—is documented to mitigate
+                            the
+                            metabolic risks of sedentary work. Even 30 seconds of targeted mobility significantly resets
+                            the
+                            metabolic rate.</p>
+                    </div>
 
-                <div class="info-card">
-                    <h3>Cardiac Health</h3>
-                    <p>The Lancet published findings that even light-intensity physical activity is associated with a
-                        14%
-                        reduced risk of all-cause mortality. Standing instead of sitting burns approximately 50 extra
-                        calories per hour.</p>
+                    <div class="info-card" id="consider-alternatives">
+                        <h3>Consider Alternatives / Learn More</h3>
+                        <p>Looking for more ways to stay active? Consider these resources and strategies:</p>
+                        <ul style="margin-top: 1rem; color: #666; line-height: 1.6;">
+                            <li><strong>Active Work Stations:</strong> Treadmill desks or cycling stations can increase
+                                daily caloric burn by 100-200 kcal/hour.</li>
+                            <li><strong>Standing Desks:</strong> Burning approximately 50 extra calories per hour
+                                compared to sitting.</li>
+                            <li><strong>Walking Meetings:</strong> Boost creative output by an average of 60% (Stanford
+                                University Study).</li>
+                        </ul>
+                    </div>
                 </div>
+            </div>
+            <section id="bottom-auth-section" class="bottom-auth-section">
+                <div class="content-container">
+                    <h3>Ready to Join the Movement?</h3>
+                    <p>Choose your role to get started or log back in.</p>
+                    <div class="bottom-auth-grid">
+                        <div class="bottom-auth-card" id="login-member-btn">
+                            <h4>Group Members</h4>
+                            <p>Join your team, track exercises, and share your daily vibe.</p>
+                            <button class="primary-btn" style="margin: 0 auto; pointer-events: none;">Login as
+                                Member</button>
+                        </div>
+                        <div class="bottom-auth-card" id="login-organizer-btn">
+                            <h4>Group Organizers</h4>
+                            <p>Create groups, manage codes, and lead your team to wellness.</p>
+                            <button class="secondary-btn" style="margin: 0 auto; pointer-events: none;">Login as
+                                Organizer</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -107,6 +221,7 @@
     <a href="index.html" class="floating-logo" title="Back to Home">
         <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
     </a>
+    <script src="exercises.js"></script>
     <script src="app.js"></script>
 </body>
 

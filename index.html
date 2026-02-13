@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Warrior | Gemini-Powered Mobility</title>
-    <link rel="canonical" href="https://workwarrior.com/" />
+    <title>Wellness Workspace | Gemini-Powered Mobility</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,38 +22,131 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="sitting.html">Sitting</a></li>
-                    <li><a href="standing.html">Standing</a></li>
+                    <li><a href="groups.html">Groups</a></li>
+                    <li><a href="exercises.html">Exercise</a></li>
+
                     <li><a href="research.html">Research</a></li>
                     <li><a href="resources.html">Resources</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
                 </ul>
             </nav>
+            <div class="auth-nav">
+                <button id="login-nav-btn" class="primary-btn">Login</button>
+                <div id="user-info" class="hidden">
+                    <span id="user-display"></span>
+                    <button id="logout-btn" class="secondary-btn"
+                        style="width: auto; padding: 0.5rem 1rem; margin-left: 1rem;">Logout</button>
+                </div>
+            </div>
             <button id="settings-toggle" class="icon-btn" title="Settings">⚙️</button>
+            <button id="mobile-menu-toggle" class="icon-btn mobile-only" title="Menu">☰</button>
         </header>
 
-        <main>
-            <section class="hero-section hero-home">
-                <h2>Optimize your work day.</h2>
-                <p>A supportive environment starts with movement. Tell Gemini how you're feeling.</p>
+        <!-- Auth Modal -->
+        <div id="auth-modal" class="modal-overlay hidden">
+            <div id="login-view">
+                <form id="auth-form" class="auth-form">
+                    <h3 id="auth-title">Welcome Back</h3>
+                    <p id="auth-subtitle">Enter your email and password to log in.</p>
+                    <div class="setting-group">
+                        <label>Email Address</label>
+                        <input type="email" id="auth-email" placeholder="email@example.com" required>
+                    </div>
+                    <div class="setting-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label>Password</label>
+                            <button type="button" id="forgot-password-btn" class="hint-link"
+                                style="font-size: 0.75rem; background: none; border: none; color: var(--primary); cursor: pointer; padding: 0;">Forgot?</button>
+                        </div>
+                        <input type="password" id="auth-password" placeholder="••••••••" required>
+                    </div>
+                    <div class="setting-group hidden" id="auth-role-group">
+                        <label>I am a...</label>
+                        <select id="auth-role">
+                            <option value="member">Group Member</option>
+                            <option value="leader">Group Leader</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="auth-submit" class="primary-btn"
+                        style="width: 100%; justify-content: center;">Log In</button>
+                    <div class="auth-toggle">
+                        <span id="toggle-text">Don't have an account?</span>
+                        <button type="button" id="toggle-auth">Create Account</button>
+                    </div>
+                </form>
+            </div>
 
-                <div class="input-container">
-                    <textarea id="feeling-input"
-                        placeholder="e.g., 'My lower back is tight from sitting' or 'I need a 5-minute energy boost'"></textarea>
-                    <button id="get-recommendation" class="primary-btn">
-                        Get Recommendation
-                        <span class="btn-shine"></span>
-                    </button>
+            <div id="reset-view" class="hidden">
+                <div class="auth-form">
+                    <h3>Reset Password</h3>
+                    <p>Enter your email and new password.</p>
+                    <div class="setting-group">
+                        <label>Email Address</label>
+                        <input type="email" id="reset-email" placeholder="email@example.com">
+                    </div>
+                    <div class="setting-group">
+                        <label>New Password</label>
+                        <input type="password" id="new-password" placeholder="••••••••">
+                    </div>
+                    <button type="button" id="confirm-reset" class="primary-btn"
+                        style="width: 100%; justify-content: center;">Update Password</button>
+                    <div class="auth-toggle">
+                        <button type="button" id="back-to-login">Back to Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main>
+            <section class="hero-section hero-home reveal">
+                <div class="content-container">
+                    <h2>Performance, Sustained.</h2>
+                    <p>Integrate evidence-based movement into your workflow. Tell Gemini how your body feels, and
+                        receive a
+                        tailored mobility protocol.</p>
+
+                    <div class="input-container">
+                        <textarea id="feeling-input"
+                            placeholder="e.g., 'My lower back is tight from sitting' or 'I need a 5-minute cognitive reset'"></textarea>
+
+                        <button id="get-recommendation" class="primary-btn" style="margin-top: 2rem;">
+                            Get Protocol
+                            <span class="btn-shine"></span>
+                        </button>
+                    </div>
                 </div>
             </section>
 
             <section id="result-section" class="result-section hidden">
-                <div class="card glass">
-                    <div id="gemini-response" class="response-content">
-                        <!-- Gemini response will be injected here -->
+                <div class="content-container">
+                    <div class="card glass">
+                        <div id="gemini-response" class="response-content">
+                            <!-- Gemini response will be injected here -->
+                        </div>
+                    </div>
+                    <div id="exercise-list" class="exercise-grid" style="margin-top: 2rem;">
+                        <!-- Exercise cards will be injected here -->
                     </div>
                 </div>
-                <div id="exercise-list" class="exercise-grid">
-                    <!-- Exercise cards will be injected here -->
+            </section>
+            <section id="bottom-auth-section" class="bottom-auth-section">
+                <div class="content-container">
+                    <h3>Ready to Join the Movement?</h3>
+                    <p>Choose your role to get started or log back in.</p>
+                    <div class="bottom-auth-grid">
+                        <div class="bottom-auth-card" id="login-member-btn">
+                            <h4>Group Members</h4>
+                            <p>Join your team, track exercises, and share your daily vibe.</p>
+                            <button class="primary-btn" style="margin: 0 auto; pointer-events: none;">Login as
+                                Member</button>
+                        </div>
+                        <div class="bottom-auth-card" id="login-organizer-btn">
+                            <h4>Group Organizers</h4>
+                            <p>Create groups, manage codes, and lead your team to wellness.</p>
+                            <button class="secondary-btn" style="margin: 0 auto; pointer-events: none;">Login as
+                                Organizer</button>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -105,6 +197,21 @@
             <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
         </a>
     </div>
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-banner" class="cookie-banner hidden">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h4>🍪 Enable Gemini Features</h4>
+                <p>We use cookies to enable our AI features. By accepting, you can use Gemini recommendations without
+                    needing your own API key.</p>
+            </div>
+            <div class="cookie-actions">
+                <button id="accept-cookies" class="primary-btn">Accept & Enable</button>
+                <button id="decline-cookies" class="secondary-btn">Maybe later</button>
+            </div>
+        </div>
+    </div>
+
     <script src="exercises.js"></script>
     <script src="app.js"></script>
 </body>

@@ -1,4 +1,4 @@
-# Work Warrior ⚔️
+# Wellness Workspace 🌿
 A modern web application designed to promote a healthy work environment by offering quick desk exercises and walking routines, powered by Google Gemini.
 
 ## 🚀 Deployment to Vercel
