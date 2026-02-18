@@ -15,7 +15,7 @@
     <div class="app-container">
         <header>
             <a href="index.html" class="logo">
-                <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+                <img src="assets/images/logo-work-warrior.svg" alt="Work Warrior Logo">
             </a>
             <nav>
                 <ul class="nav-links">
@@ -152,14 +152,23 @@
                                 style="margin-bottom: 2rem; background: rgba(var(--primary-rgb), 0.05); border: 1px dashed var(--primary);">
                                 <h3 style="margin: 0 0 1rem 0;">🛠 Leader Dashboard</h3>
                                 <div class="leader-controls" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                                    <button id="generate-code-btn" class="secondary-btn" style="width: auto;">Generate
-                                        New Group Code</button>
+
+                                    <div class="quick-actions-bar" style="display: flex; gap: 0.5rem; width: 100%;">
+                                        <button id="generate-code-btn" class="secondary-btn" style="flex: 1;">↻ New
+                                            Code</button>
+                                        <button id="copy-invite-link-btn" class="secondary-btn" style="flex: 1;">🔗 Copy
+                                            Invite Link</button>
+                                    </div>
+
                                     <div id="generated-code-display" class="hidden"
-                                        style="display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #ddd;">
-                                        <span id="new-group-code"
-                                            style="font-family: monospace; font-weight: 700; color: var(--primary);"></span>
-                                        <button id="copy-code-btn" class="hint-link"
-                                            style="padding: 0; border: none; background: none; color: var(--primary); font-size: 0.8rem; cursor: pointer;">Copy</button>
+                                        style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: var(--surface-light); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-bright); margin-top: 0.5rem;">
+                                        <div style="display: flex; flex-direction: column;">
+                                            <span class="hint" style="font-size: 0.75rem;">Share this code:</span>
+                                            <span id="new-group-code"
+                                                style="font-family: monospace; font-size: 1.5rem; font-weight: 700; color: var(--primary); letter-spacing: 2px;"></span>
+                                        </div>
+                                        <button id="copy-code-btn" class="primary-btn"
+                                            style="padding: 0.5rem 1rem; font-size: 0.85rem;">Copy</button>
                                     </div>
                                 </div>
                                 <div id="leader-newsletter-tools" class="hidden"
@@ -205,6 +214,13 @@
                                     <h3 class="section-title">Team Synergy</h3>
                                     <div id="member-list" class="member-list">
                                         <!-- Member vibe cards will be injected here -->
+                                        <div id="empty-members-state" class="hidden"
+                                            style="text-align: center; padding: 3rem; background: var(--surface-light); border-radius: var(--radius-md); grid-column: 1 / -1;">
+                                            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">👋</div>
+                                            <h4>It's quiet in here...</h4>
+                                            <p class="hint">Invite your teammates using the code above to start tracking
+                                                your collective vitality!</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="vibe-update-section">
@@ -254,7 +270,7 @@
         </main>
 
         <a href="index.html" class="floating-logo" title="Back to Home">
-            <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+            <img src="assets/images/logo-work-warrior.svg" alt="Work Warrior Logo">
         </a>
     </div>
 
@@ -266,7 +282,7 @@
         </div>
         <div class="settings-content">
             <div class="setting-group">
-                <label for="gemini-model">Gemini Model</label>
+                <label for="gemini-model">Warrior Bot AI Model</label>
                 <select id="gemini-model">
                     <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
                     <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (Latest)</option>
@@ -282,7 +298,7 @@
                     style="max-height: 100px; overflow-y: auto; white-space: pre-wrap;"></div>
             </div>
             <div class="setting-group">
-                <label for="api-key">Gemini API Key</label>
+                <label for="api-key">Warrior Bot API Key (Gemini)</label>
                 <input type="password" id="api-key" placeholder="Enter your API key">
             </div>
             <div class="setting-group">

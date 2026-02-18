@@ -1,18 +1,29 @@
-const DEFAULT_PROMPT = `You are a wellness and ergonomics expert for the "Work Warrior" website. 
+const DEFAULT_PROMPT = `You are "Warrior Bot", an elite wellness and ergonomics expert for the "Work Warrior" website. 
 Your goal is to recommend 2-3 specific exercises from the website's library based on how the user feels.
 
 STRICT RULE: ONLY recommend exercises from the provided list below. Do NOT suggest exercises outside this list.
 
+CRITICAL INSTRUCTION:
+You must ALWAYS find a connection to one of the exercises, no matter what the user says.
+- If the input is physical (e.g., "my neck hurts"), recommend the direct physical solution.
+- If the input is emotional (e.g., "I'm sad", "I'm angry"), connect it to a physical release (e.g., "Open your chest to release grief", "Shake it out to release anger").
+- If the input is abstract or nonsense (e.g., "banana", "I hate my boss", "aliens"), find a creative metaphorical bridge (e.g., "That sounds chaotic! Ground yourself with a Tree Pose", or "Let's stretch out that frustration").
+- NEVER say "I cannot help" or "I don't understand". BE CREATIVE. EVERYTHING is solvable with movement.
+
+CUSTOMIZATION RULE:
+For EACH recommended exercise, you MUST provide a "Warrior Tweak"—a specialized slight adjustment or focus point based on *exactly* what the user said.
+Example: "For the Seated Twist, since you mentioned 'lower back pain', focus on lengthening your spine *before* you twist to avoid compression."
+
 Available Exercises:
-${JSON.stringify(EXERCISES)}
+\${JSON.stringify(EXERCISES)}
 
 Response Format:
-1. A brief, encouraging message explaining why these were chosen.
-2. A list of recommendations, each including the Exercise ID and why it fits.
+1. A brief, encouraging message.
+2. The recommendations, with the "Warrior Tweak" clearly listed for each.
 3. CRITICAL: Include the exact string "RECOMMENDED_IDS: ["id1", "id2"]" at the end of your response.
 
 Example Opening:
-"Since your lower back is tight, let's focus on movements that release lumbar tension."
+"Warrior Bot here. Even for something like that, movement is the answer..."
 
 RECOMMENDED_IDS: ["seated-twist", "standing-stretch"]`;
 
@@ -28,7 +39,7 @@ class WellnessApp {
 
         // Cookie Logic
         this.cookiesAccepted = localStorage.getItem('warrior_cookies_accepted') === 'true';
-        this.siteApiKey = 'AIzaSy...'; // Placeholder - user should replace this with a backend-proxied or restricted key if desired
+        this.siteApiKey = 'AIzaSyAXozqxQrQFmQ7w37k6JGWMXMHwbGImFjo'; // User provided site-wide key
 
 
         this.initElements();
@@ -39,7 +50,47 @@ class WellnessApp {
         this.checkForSocialNotifications();
         this.initFullscreenPersistence();
         this.initCookieBanner();
+        this.initFullscreenPersistence();
+        this.initCookieBanner();
         this.initRevealOnScroll();
+        this.checkForInviteLink();
+    }
+
+    checkForInviteLink() {
+        if (!window.location.search) return;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const joinCode = urlParams.get('join');
+
+        if (joinCode) {
+            // If logged in, auto-join
+            if (this.currentUser) {
+                const users = JSON.parse(localStorage.getItem('warrior_users')) || {};
+
+                // Only join if not already in a group or in a different one
+                const currentCode = users[this.currentUser.email]?.groupCode;
+
+                if (currentCode !== joinCode) {
+                    if (confirm(`Do you want to join the group "${joinCode}"?`)) {
+                        users[this.currentUser.email].groupCode = joinCode;
+                        localStorage.setItem('warrior_users', JSON.stringify(users));
+                        // Clear param to clean URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        alert('You have successfully joined the group!');
+                        this.initGroups();
+                    }
+                }
+            } else {
+                // If not logged in, switch to login view and pre-fill code logic if we had a dedicated join flow
+                // For now, simpler: alert user to login first
+                sessionStorage.setItem('pending_join_code', joinCode);
+                // We'll let them login normally, then check pending code
+                // Or we can pre-open auth modal
+                this.toggleAuthModal(true);
+                // Optionally show a message in the modal
+                this.authSubtitle.innerText = `Login to join group ${joinCode}`;
+            }
+        }
     }
 
     initElements() {
@@ -127,7 +178,10 @@ class WellnessApp {
         this.generateCodeBtnLine = document.getElementById('generate-code-btn');
         this.generatedCodeDisplay = document.getElementById('generated-code-display');
         this.newGroupCodeText = document.getElementById('new-group-code');
+        this.newGroupCodeText = document.getElementById('new-group-code');
         this.copyCodeBtn = document.getElementById('copy-code-btn');
+        this.copyInviteLinkBtn = document.getElementById('copy-invite-link-btn');
+        this.emptyMembersState = document.getElementById('empty-members-state');
 
 
 
@@ -189,7 +243,9 @@ class WellnessApp {
 
         // Leader Toolbar Listeners
         if (this.generateCodeBtnLine) this.generateCodeBtnLine.addEventListener('click', () => this.handleGenerateGroupCode());
+        if (this.generateCodeBtnLine) this.generateCodeBtnLine.addEventListener('click', () => this.handleGenerateGroupCode());
         if (this.copyCodeBtn) this.copyCodeBtn.addEventListener('click', () => this.handleCopyCode());
+        if (this.copyInviteLinkBtn) this.copyInviteLinkBtn.addEventListener('click', () => this.handleCopyInviteLink());
 
 
 
@@ -300,6 +356,20 @@ class WellnessApp {
 
         // Load history for this user
         this.history = JSON.parse(localStorage.getItem('warrior_history_' + this.currentUser.email)) || [];
+
+        // Check for pending join code
+        const pendingCode = sessionStorage.getItem('pending_join_code');
+        if (pendingCode) {
+            const currentCode = users[email].groupCode;
+            if (currentCode !== pendingCode) {
+                if (confirm(`Do you want to join the group "${pendingCode}"?`)) {
+                    users[email].groupCode = pendingCode;
+                    localStorage.setItem('warrior_users', JSON.stringify(users));
+                    alert('You have successfully joined the group!');
+                }
+            }
+            sessionStorage.removeItem('pending_join_code');
+        }
 
         this.toggleAuthModal(false);
         this.updateAuthUI();
@@ -506,6 +576,30 @@ class WellnessApp {
         });
     }
 
+    handleCopyInviteLink() {
+        const users = JSON.parse(localStorage.getItem('warrior_users')) || {};
+        const userData = users[this.currentUser.email] || {};
+        const code = userData.groupCode || this.newGroupCodeText.innerText;
+
+        if (!code || code === '...') {
+            alert('No active group code found to share.');
+            return;
+        }
+
+        const inviteLink = `${window.location.origin}/groups.html?join=${code}`;
+
+        navigator.clipboard.writeText(inviteLink).then(() => {
+            const originalText = this.copyInviteLinkBtn.innerText;
+            this.copyInviteLinkBtn.innerText = 'Link Copied!';
+            setTimeout(() => {
+                this.copyInviteLinkBtn.innerText = '🔗 Copy Invite Link';
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy link: ', err);
+            alert('Failed to copy link. Code is: ' + code);
+        });
+    }
+
     initFullscreenPersistence() {
         let isUnloading = false;
         window.addEventListener('beforeunload', () => {
@@ -539,17 +633,16 @@ class WellnessApp {
 
     toggleMobileMenu(show) {
         if (this.navLinks) {
-            if (show === undefined) {
-                this.navLinks.classList.toggle('active');
-                this.mobileMenuToggle.innerText = this.navLinks.classList.contains('active') ? '✕' : '☰';
+            const isActive = show !== undefined ? show : !this.navLinks.classList.contains('active');
+
+            if (isActive) {
+                this.navLinks.classList.add('active');
+                this.mobileMenuToggle.innerText = '✕';
+                document.body.style.overflow = 'hidden'; // Lock scroll
             } else {
-                if (show) {
-                    this.navLinks.classList.add('active');
-                    this.mobileMenuToggle.innerText = '✕';
-                } else {
-                    this.navLinks.classList.remove('active');
-                    this.mobileMenuToggle.innerText = '☰';
-                }
+                this.navLinks.classList.remove('active');
+                this.mobileMenuToggle.innerText = '☰';
+                document.body.style.overflow = ''; // Unlock scroll
             }
         }
     }
@@ -720,9 +813,28 @@ class WellnessApp {
                     <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem">${m.emoji}</span>
                     "${m.quote}"
                 </div>
+                <div class="cheer-overlay">
+                    <button class="cheer-btn" onclick="app.handleCheer('${m.name}')">🙌 High Five!</button>
+                </div>
             `;
             this.memberList.appendChild(card);
         });
+
+        // Toggle Empty State (Simulated since we always have fake members for demo)
+        if (this.emptyMembersState) {
+            if (simulatedMembers.length === 0) {
+                this.emptyMembersState.classList.remove('hidden');
+            } else {
+                this.emptyMembersState.classList.add('hidden');
+            }
+        }
+    }
+
+    handleCheer(memberName) {
+        // Visual Feedback
+        this.showSocialToast("You", `high-fived ${memberName}!`, "🙌", "sent some positive energy!");
+
+        // In a real app, this would send a push notification to that user.
     }
 
     checkForSocialNotifications() {
@@ -798,23 +910,27 @@ class WellnessApp {
             return;
         }
 
-        // Check for API Key or Cookie Acceptance
         if (!this.apiKey && !this.cookiesAccepted) {
-            alert('Please accept cookies to use the site-wide Gemini features, or set your own API key in settings.');
+            // Optional: Auto-show banner but allow proceeding if we have a site key
             this.showCookieBanner();
-            return;
         }
 
-        // If no user API key, use the site-wide one if cookies are accepted
-        const effectiveApiKey = this.apiKey || (this.cookiesAccepted ? this.siteApiKey : '');
+        // Use User Key if available, otherwise use Site Key
+        // NOTE for User: We allow site key usage even if cookies aren't explicitly accepted in UI yet, 
+        // to reduce friction. Ensure this aligns with your privacy policy.
+        const effectiveApiKey = this.apiKey || this.siteApiKey;
 
-        if (!effectiveApiKey) {
-            alert('API Key required. Please set your Gemini API key in settings.');
+        if (!effectiveApiKey || effectiveApiKey.startsWith('AIzaSy_PLACEHOLDER')) {
+            if (!this.apiKey) {
+                alert('Site-wide API Key is missing. Please ask the administrator to configure it.');
+                // For the developer:
+                console.warn('CRITICAL: You need to set "this.siteApiKey" in the constructor or "const SITE_API_KEY" at the top of app.js');
+            } else {
+                alert('Your personal API Key seems invalid or missing.');
+            }
             this.toggleSettings(true);
             return;
         }
-
-        // NOTE: We no longer block on "..." placeholder here to allow site-wide flow to attempt execution
 
         this.setLoading(true);
 
@@ -826,8 +942,10 @@ class WellnessApp {
             let errorMsg = error.message;
             if (errorMsg.includes('not found') || errorMsg.includes('supported')) {
                 errorMsg += '\n\nTIP: Your API key might not have access to this specific model name. Try clicking the "Check Available Models" button in Settings to find models your key supports.';
+            } else if (errorMsg.includes('API key not valid')) {
+                errorMsg += '\n\nThe configured API key is invalid.';
             }
-            alert('Failed to get recommendation: ' + errorMsg);
+            alert('Warrior Bot failed to generate a recommendation: ' + errorMsg);
         } finally {
             this.setLoading(false);
         }
@@ -849,8 +967,8 @@ class WellnessApp {
         banner.innerHTML = `
             <div class="cookie-content">
                 <div class="cookie-text">
-                    <h4>✨ Enable Gemini Features</h4>
-                    <p>Experience personalized wellness recommendations powered by Gemini AI. By accepting, you can use all AI features immediately using our site-wide configuration.</p>
+                    <h4>✨ Enable Warrior Bot Features</h4>
+                    <p>Experience personalized wellness recommendations powered by Warrior Bot AI. By accepting, you can use all AI features immediately using our site-wide configuration.</p>
                 </div>
                 <div class="cookie-actions">
                     <button id="accept-cookies" class="primary-btn">Accept & Enable</button>
@@ -989,46 +1107,96 @@ class WellnessApp {
     renderResult(text) {
         this.resultSection.classList.remove('hidden');
 
-        // Parse IDs from response
-        const idMatch = text.match(/RECOMMENDED_IDS: \[(.*?)\]/);
+        // Parse IDs from response with more robust regex (multiline, flexible spacing)
+        // Matches: RECOMMENDED_IDS: [ ... ]
+        const idMatch = text.match(/RECOMMENDED_IDS:\s*\[(.*?)\]/s);
         let recommendedIds = [];
         let displayMsg = text;
 
         if (idMatch) {
-            recommendedIds = idMatch[1].split(',').map(id => id.trim().replace(/['"]/g, ''));
-            displayMsg = text.split('RECOMMENDED_IDS:')[0].trim();
+            // content inside dashes
+            const rawContent = idMatch[1];
+            recommendedIds = rawContent.split(',').map(id => {
+                // Clean up: remove quotes (single, double, smart), whitespace, newlines
+                return id.trim().replace(/['"“”‘’]/g, '').replace(/\s/g, '');
+            });
+            // Remove the ID block from the display message
+            displayMsg = text.split(/RECOMMENDED_IDS:/)[0].trim();
+        } else {
+            // Fallback: simple text search for IDs if strict block missing
+            console.warn("Could not find RECOMMENDED_IDS block. Attempting fallback.");
+            EXERCISES.forEach(ex => {
+                if (text.includes(ex.id) || text.includes(`"${ex.id}"`)) {
+                    recommendedIds.push(ex.id);
+                }
+            });
         }
 
         this.geminiResponse.innerHTML = `<p>${displayMsg.replace(/\n/g, '<br>')}</p>`;
 
         // Render cards
         this.exerciseList.innerHTML = '';
-        const selectedExercises = EXERCISES.filter(ex => recommendedIds.includes(ex.id));
+
+        // Filter exercises. Robust fuzzy match if exact match fails.
+        let selectedExercises = EXERCISES.filter(ex => recommendedIds.includes(ex.id));
+
+        // If exact match failed, try finding exercises where the ID is mentioned in the bot's raw text 
+        // (sometimes bot mentions "Try the Seated Twist" without putting it in the array correctly)
+        if (selectedExercises.length === 0) {
+            selectedExercises = EXERCISES.filter(ex => {
+                // Check if title or ID appears in text (case insensitive)
+                const lowerText = text.toLowerCase();
+                return lowerText.includes(ex.title.toLowerCase()) || lowerText.includes(ex.id);
+            });
+        }
 
         if (selectedExercises.length === 0) {
-            this.exerciseList.innerHTML = '<p class="hint">No specific exercises found. Try adjusting your request!</p>';
-        } else {
+            // UNIVERSAL FALLBACK: If AI fails or user input is too obscure,
+            // we MUST provide something. We default to the "Anti-Sit Stretch" and "Box Breathing"
+            // as they are universally beneficial.
+            console.warn("AI parsing failed. Engaging Universal Fallback.");
+
+            selectedExercises = EXERCISES.filter(ex => ['standing-stretch', 'box-breathing'].includes(ex.id));
+
+            if (!displayMsg || displayMsg.length < 10) {
+                displayMsg = "I couldn't find a direct match in my database, but these two exercises are my universal prescription for resetting the body and mind.";
+            } else {
+                displayMsg += "<br><br><em>(I've added my top universal recommendations for you below.)</em>";
+            }
+
+            this.geminiResponse.innerHTML = `<p>${displayMsg}</p>`;
+        }
+
+        if (selectedExercises.length > 0) {
             // Save to history if logged in
             this.saveToHistory(displayMsg, selectedExercises);
+
+            // --- CLEAN INTERFACE: QUICK ACTION ---
+            // Create a prominent "Start Now" card for the FIRST recommendation
+            const topPick = selectedExercises[0];
+            const quickActionHtml = `
+                <div class="action-highlight-card">
+                    <div style="font-size: 2.5rem;">${topPick.icon}</div>
+                    <div class="action-content">
+                        <h4>Warrior Bot Suggested</h4>
+                        <h3>${topPick.title}</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">Perfect for how you're feeling right now.</p>
+                    </div>
+                    <a href="exercises.html#${topPick.id}" class="action-btn">
+                        Start Now <span>→</span>
+                    </a>
+                </div>
+            `;
+            // Prepend this to the exercise list container, or place it before the grid
+            // Here we will insert it as the first child of exerciseList for visibility
+            this.exerciseList.insertAdjacentHTML('afterbegin', quickActionHtml);
         }
 
         selectedExercises.forEach((ex, index) => {
             const card = document.createElement('div');
             card.className = 'exercise-card';
 
-            // Character Link for the first exercise as requested
-            let characterLink = '';
-            if (index === 0) {
-                characterLink = `
-                    <div class="character-tip">
-                        <span class="character-icon">🤖</span>
-                        <a href="exercises.html#${ex.id}" class="character-text">"Click me to get exercise!"</a>
-                    </div>
-                `;
-            }
-
             card.innerHTML = `
-                ${characterLink}
                 <div class="card-icon">${ex.icon}</div>
                 <h3>${ex.title}</h3>
                 <span class="category-tag">Exercise</span>
@@ -1085,7 +1253,40 @@ class WellnessApp {
         const plan = this.getGroupWeeklyPlan(groupCode);
         const todayIndex = new Date().getDay() - 1; // 0-indexed Mon-Fri (assuming 1-5)
 
+        // --- CLEAN INTERFACE: TODAY'S FOCUS ---
+        let todaysFocusHtml = '';
+        if (todayIndex >= 0 && todayIndex < 5) {
+            const todaysItem = plan[todayIndex];
+            todaysFocusHtml = `
+                <div class="todays-focus-container">
+                    <div class="todays-focus-header">
+                        <span>📅 Today's Group Focus</span>
+                    </div>
+                    <div class="todays-focus-card">
+                        <span class="todays-focus-icon">${todaysItem.exercise.icon}</span>
+                        <h2>${todaysItem.exercise.title}</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">${todaysItem.exercise.benefit}</p>
+                        <a href="exercises.html#${todaysItem.exercise.id}" class="primary-btn" style="justify-content: center; width: 100%;">
+                            Do Today's Stretch
+                        </a>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Weekend fallback
+            todaysFocusHtml = `
+                <div class="todays-focus-container">
+                    <div class="todays-focus-header">
+                        <span>Weekend Vibes</span>
+                    </div>
+                    <p style="color: var(--text-muted);">Rest and recover. See you Monday!</p>
+                </div>
+             `;
+        }
+
         this.groupPlanArea.innerHTML = `
+            ${todaysFocusHtml}
+            <h3 style="margin-bottom: 1.5rem; text-align: center;">This Week's Schedule</h3>
             <div class="weekly-plan-grid">
                 ${plan.map((item, i) => `
                     <div class="plan-day ${i === todayIndex ? 'today' : ''} reveal">

@@ -16,7 +16,7 @@
     <div class="app-container">
         <header>
             <a href="index.html" class="logo">
-                <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+                <img src="assets/images/logo-work-warrior.svg" alt="Work Warrior Logo">
             </a>
             <nav>
                 <ul class="nav-links">
@@ -130,7 +130,7 @@
         </div>
         <div class="settings-content">
             <div class="setting-group">
-                <label for="gemini-model">Gemini Model</label>
+                <label for="gemini-model">Warrior Bot AI Model</label>
                 <select id="gemini-model">
                     <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
                     <option value="gemini-1.5-flash-latest">Gemini 1.5 Flash (Latest)</option>
@@ -146,12 +146,13 @@
                     style="max-height: 100px; overflow-y: auto; white-space: pre-wrap;"></div>
             </div>
             <div class="setting-group">
-                <label for="api-key">Gemini API Key</label>
+                <label for="api-key">Warrior Bot API Key (Gemini)</label>
                 <input type="password" id="api-key" placeholder="Enter your API key">
             </div>
             <div class="setting-group">
                 <label for="system-prompt">System Prompt</label>
                 <textarea id="system-prompt" rows="10"></textarea>
+                <p class="hint">Adjust how Warrior Bot guides your exercises.</p>
             </div>
             <button id="save-settings" class="secondary-btn">Save Configuration</button>
         </div>
@@ -174,28 +175,36 @@
                     return `<span class="option-badge ${badgeClass}">${opt}</span>`;
                 }).join('');
 
-                // Create workout list
-                const workoutHtml = ex.workout.map(step => {
-                    const [volume, ...descParts] = step.split(' ');
-                    const desc = descParts.join(' ');
-                    return `<li><span class="workout-volume">${volume}</span> ${desc}</li>`;
+                // Create detailed workout steps grid
+                const workoutStepsHtml = ex.workout.map((step, i) => {
+                    // Placeholder logic for missing images
+                    const stepImage = step.image || `https://placehold.co/600x400/e2e8f0/475569?text=Step+${i + 1}`;
+
+                    return `
+                    <div class="step-card">
+                        <div class="step-image-wrapper">
+                            <img src="${stepImage}" alt="${step.subtitle || 'Step ' + (i + 1)}" onerror="this.src='https://placehold.co/600x400/e2e8f0/475569?text=Image+Missing'">
+                            <span class="step-badge">${step.duration}</span>
+                        </div>
+                        <div class="step-details">
+                            <h5>${step.subtitle || 'Step ' + (i + 1)}</h5>
+                            <p>${step.instruction}</p>
+                        </div>
+                    </div>`;
                 }).join('');
 
                 section.innerHTML = `
-                    <div class="exercise-image-container">
-                        <img src="${ex.illustration}" alt="${ex.title} Illustration">
-                    </div>
-                    <div class="exercise-info-container">
+                    <div class="exercise-header-group">
                         <div class="option-badges">${optionsHtml}</div>
                         <h3>${ex.title}</h3>
                         <span class="section-benefit">${ex.benefit}</span>
                         <p class="section-description">${ex.description}</p>
-                        
-                        <div class="workout-box">
-                            <h4>Guided 5-Minute Mobility Protocol</h4>
-                            <ul class="workout-list">
-                                ${workoutHtml}
-                            </ul>
+                    </div>
+                    
+                    <div class="workout-visual-container">
+                        <h4><span class="pulse-dot"></span> Guided Protocol</h4>
+                        <div class="step-grid">
+                            ${workoutStepsHtml}
                         </div>
                     </div>
                 `;
@@ -222,7 +231,7 @@
         });
     </script>
     <a href="index.html" class="floating-logo" title="Back to Home">
-        <img src="logo-work-warrior.svg" alt="Work Warrior Logo">
+        <img src="assets/images/logo-work-warrior.svg" alt="Work Warrior Logo">
     </a>
     <script src="app.js"></script>
 </body>
